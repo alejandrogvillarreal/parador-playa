@@ -1,0 +1,459 @@
+{
+	"info": {
+		"_postman_id": "054b0b99-c7dc-4d41-97db-348cc7f08ede",
+		"name": "Parador",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7473971"
+	},
+	"item": [
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "productos.list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productos.index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/productos/:productoId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"productos",
+								":productoId"
+							],
+							"variable": [
+								{
+									"key": "productoId",
+									"value": "680eb7e9e4dc7085264f220f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productos.create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Nuevo jetsky\",\r\n    \"tipo\": \"jetsky\",\r\n    \"precio\": 100,\r\n    \"requiereCasco\": false,\r\n    \"requiereChaleco\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "clientes.list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "clientes.create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Marcos\",\r\n    \"apellido\": \"Lopez\",\r\n    \"email\": \"marcos@example.com\",\r\n    \"documento\": \"56789012\",\r\n    \"tarjetas\": [\r\n            {\r\n                \"numero\": \"1234567812345678\",\r\n                \"tipo\": \"visa\",\r\n                \"vencimiento\": \"12/25\",\r\n                \"titular\": \"Marcos Lopez\",\r\n                \"codigoSeguridad\": \"123\"\r\n            }\r\n        ]\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/clientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "clientes.edit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Marcos\",\r\n    \"apellido\": \"Lopez\",\r\n    \"email\": \"marcos@example.com\",\r\n    \"documento\": \"56789012\",\r\n    \"tarjetas\": [\r\n            {\r\n                \"numero\": \"1234567812345678\",\r\n                \"tipo\": \"mastercard\",\r\n                \"vencimiento\": \"12/25\",\r\n                \"titular\": \"Marcos Lopez\",\r\n                \"codigoSeguridad\": \"123\"\r\n            }\r\n        ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/clientes/:clienteId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clientes",
+								":clienteId"
+							],
+							"variable": [
+								{
+									"key": "clienteId",
+									"value": "680eb98115787ca107924cdd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "clientes.delete.tarjeta",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/clientes/:clienteId/tarjetas/:tarjetaId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"clientes",
+								":clienteId",
+								"tarjetas",
+								":tarjetaId"
+							],
+							"variable": [
+								{
+									"key": "clienteId",
+									"value": "680eb98115787ca107924cdd"
+								},
+								{
+									"key": "tarjetaId",
+									"value": "680eba2c15787ca107924cf4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reservas",
+			"item": [
+				{
+					"name": "reservas.list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/reservas/:reservaId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas",
+								":reservaId"
+							],
+							"variable": [
+								{
+									"key": "reservaId",
+									"value": "680ec2e2946153698b943fad"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.list.client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/reservas/cliente/:clienteId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas",
+								"cliente",
+								":clienteId"
+							],
+							"variable": [
+								{
+									"key": "clienteId",
+									"value": "680eb7e9e4dc7085264f2215"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cliente\": \"680eb7e9e4dc7085264f2215\",\r\n  \"productos\": [\r\n    {\r\n      \"producto\": \"680eb7e9e4dc7085264f220f\",\r\n      \"personas\": 2,\r\n      \"turnos\": 2\r\n    },\r\n    {\r\n      \"producto\": \"680eb7e9e4dc7085264f2210\",\r\n      \"personas\": 1,\r\n      \"turnos\": 1\r\n    }\r\n  ],\r\n  \"fechaHora\": \"2025-04-28T14:00:00Z\",\r\n  \"metodoPago\": \"efectivo\",\r\n  \"moneda\": \"local\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/reservas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.pagar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"metodoPago\": \"efectivo\",\r\n  \"moneda\": \"local\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/reservas/:id/pagar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas",
+								":id",
+								"pagar"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "680445f5c4bcb4b1ec74cbab"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.cancelar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/reservas/:id/cancelar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas",
+								":id",
+								"cancelar"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "680432620d2a10042801ebbb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.reembolsoTormenta",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/reservas/:id/tormenta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas",
+								":id",
+								"tormenta"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "680432620d2a10042801ebbb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reservas.liberarNoPagadas",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/reservas/liberar/no-pagadas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"reservas",
+								"liberar",
+								"no-pagadas"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
