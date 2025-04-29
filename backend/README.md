@@ -50,7 +50,7 @@ MONGO_URI=tu_url_de_conexion_a_mongodb
 ## Cómo correr el proyecto
 
 ```bash
-npm start
+npm run dev
 ```
 
 El servidor iniciará en: [http://localhost:4000](http://localhost:4000)
