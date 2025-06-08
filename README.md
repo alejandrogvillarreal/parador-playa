@@ -53,21 +53,22 @@ parador-playa/
 ```
 
 - El detalle completo del backend (instalación, configuración y endpoints) se encuentra en el archivo [`backend/README.md`](backend/README.md).
-- El frontend se encuentra en construcción.
+- Documentación detallada del frontend en [`frontend/README.md`](frontend/README.md)
 
 ---
 
 ## Tecnologías utilizadas
 
 - **Backend**: Node.js, Express, MongoDB Atlas
-- **Frontend**: Próximamente (HTML, CSS, JavaScript)
+- **Frontend**: React · React Router DOM · TailwindCSS · Flowbite · Vite
 
 ---
 
 ## Estado del Proyecto
 
-- Backend ✅ Completado
-- Frontend 🚧 En desarrollo
+- Backend: **✅ Completado**
+- Frontend: **✅ Completado**
+- Integración: **✅ Totalmente funcional**
 
 ---
 
