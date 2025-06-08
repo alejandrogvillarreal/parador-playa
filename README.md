@@ -47,7 +47,7 @@ parador-playa/
 │   └── (API REST desarrollada en Node.js, Express y MongoDB Atlas)
 │
 ├── frontend/
-│   └── (Aplicación web en desarrollo)
+│   └── (Aplicación web desarrollada con React)
 │
 └── README.md (este archivo)
 ```
@@ -60,7 +60,7 @@ parador-playa/
 ## Tecnologías utilizadas
 
 - **Backend**: Node.js, Express, MongoDB Atlas
-- **Frontend**: React · React Router DOM · TailwindCSS · Flowbite · Vite
+- **Frontend**: React, React Router DOM, TailwindCSS, Flowbite, Vite
 
 ---
 
