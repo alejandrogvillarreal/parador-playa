@@ -63,7 +63,7 @@ const handleCancelar = async (id) => {
   const handleReembolso = async (id) => {
     try {
       await reembolsarPorTormenta(id);
-      alert("Reembolso aplicado con éxito");
+      alert("Reembolso aplicado con éxito. Se le devolverá el 50% del valor abonado");
       await cargarReservas(); // recarga después del reembolso
     } catch (err) {
       alert("Error al aplicar reembolso: " + err.message);
