@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:4000/productos";
+import { API_BASE } from "../constants";
+const API_URL = `${API_BASE}/productos`;
 
 export const getProductos = async () => {
   const res = await fetch(API_URL);

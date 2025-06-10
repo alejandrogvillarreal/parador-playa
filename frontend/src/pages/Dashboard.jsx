@@ -21,7 +21,7 @@ export default function Dashboard() {
     try {
       setLoading(true);
       const data = await getReservasByCliente(clienteId);
-      setReservas(data);
+      setReservas(data.reverse());
     } catch (err) {
       console.error(err);
       setError("No se pudieron cargar las reservas.");
@@ -34,9 +34,20 @@ export default function Dashboard() {
     cargarReservas();
   }, []);
 
+  const ahora = new Date();
+
   const resumen = {
-    activas: reservas.filter((r) => r.estado === "pendiente" || r.estado === "pagado"),
-    historial: reservas.filter((r) => r.estado === "cancelado" || r.estado === "liberado"),
+    activas: reservas.filter(
+      (r) =>
+        (r.estado === "pendiente" || r.estado === "pagado") &&
+        new Date(r.fecha) > ahora
+    ),
+    historial: reservas.filter(
+      (r) =>
+        r.estado === "cancelado" ||
+        r.estado === "liberado" ||
+        (r.estado === "pagado" && new Date(r.fecha) <= ahora)
+    ),
   };
 
   const estadoLabel = {

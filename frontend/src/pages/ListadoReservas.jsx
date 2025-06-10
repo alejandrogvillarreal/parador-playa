@@ -26,7 +26,7 @@ export default function ListadoReservas() {
     try {
       setLoading(true);
       const data = await getReservasByCliente(clienteId);
-      setReservas(data);
+      setReservas(data.reverse());
     } catch (err) {
       setError(err.message);
     } finally {
@@ -70,6 +70,20 @@ const handleCancelar = async (id) => {
     }
   };
 
+  const ahora = new Date();
+
+  const futuras = reservas.filter(
+    (r) => (r.estado === "pendiente" || r.estado === "pagado") && new Date(r.fecha) > ahora
+  );
+
+  const pasadas = reservas.filter(
+    (r) => r.estado === "pagado" && new Date(r.fecha) <= ahora
+  );
+
+  const historial = reservas.filter(
+    (r) => r.estado === "cancelado" || r.estado === "liberado"
+  );
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-6 text-blue-800">Mis Reservas</h2>
@@ -81,27 +95,74 @@ const handleCancelar = async (id) => {
         <p className="text-gray-600">No tenés reservas realizadas.</p>
       )}
 
-      <div className="flex flex-wrap gap-6 justify-center">
-        {reservas.map((reserva) => {
-          const primerProducto = reserva.productos[0];
-          return (
-            <ReservaCard
-              key={reserva.id}
-              // nombre={primerProducto?.producto?.nombre || "Producto"}
-              nombre={reserva.productos.map((p) => p.nombre).join(", ")}
-              fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
-              estado={reserva.estado}
-              imagen={primerProducto.imagen}
-              // casco={primerProducto?.dispositivosExtra?.casco || 0}
-              // chaleco={primerProducto?.dispositivosExtra?.chaleco || 0}
-              reembolso={reserva.reembolsoPorTormenta}
-              onCancelar={() => handleCancelar(reserva.id)}
-              onPagar={() => setReservaSeleccionada(reserva)}
-              onTormenta={() => handleReembolso(reserva.id)}
-            />
-          );
-        })}
-      </div>
+        {futuras.length > 0 && (
+        <>
+          <h3 className="text-xl text-center font-semibold text-blue-700 mb-8">📅 Próximas reservas</h3>
+          <div className="flex flex-wrap gap-6 justify-center mb-8">
+            {futuras.map((reserva) => (
+              <ReservaCard
+                key={reserva.id}
+                nombre={reserva.productos.map((p) => p.nombre).join(", ")}
+                fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
+                estado={reserva.estado}
+                imagen={reserva.productos[0]?.imagen}
+                casco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.casco || 0), 0)}
+                chaleco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.chaleco || 0), 0)}
+                reembolso={reserva.reembolsoPorTormenta}
+                onCancelar={() => handleCancelar(reserva.id)}
+                onPagar={() => setReservaSeleccionada(reserva)}
+                onTormenta={() => handleReembolso(reserva.id)}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {pasadas.length > 0 && (
+        <>
+          <h3 className="text-xl text-center font-semibold text-gray-700 mb-8">🕓 Reservas finalizadas</h3>
+          <div className="flex flex-wrap gap-6 justify-center mb-8">
+            {pasadas.map((reserva) => (
+              <ReservaCard
+                key={reserva.id}
+                nombre={reserva.productos.map((p) => p.nombre).join(", ")}
+                fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
+                estado="finalizada"
+                imagen={reserva.productos[0]?.imagen}
+                casco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.casco || 0), 0)}
+                chaleco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.chaleco || 0), 0)}
+                reembolso={reserva.reembolsoPorTormenta}
+                onCancelar={() => {}}
+                onPagar={() => {}}
+                onTormenta={() => {}}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {historial.length > 0 && (
+        <>
+          <h3 className="text-xl text-center font-semibold text-gray-600 mb-8">📜 Canceladas / Liberadas</h3>
+          <div className="flex flex-wrap gap-6 justify-center">
+            {historial.map((reserva) => (
+              <ReservaCard
+                key={reserva.id}
+                nombre={reserva.productos.map((p) => p.nombre).join(", ")}
+                fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
+                estado={reserva.estado}
+                imagen={reserva.productos[0]?.imagen}
+                casco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.casco || 0), 0)}
+                chaleco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.chaleco || 0), 0)}
+                reembolso={reserva.reembolsoPorTormenta}
+                onCancelar={() => {}}
+                onPagar={() => {}}
+                onTormenta={() => {}}
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       {/* Modal de pago reutilizable */}
       <ModalPago

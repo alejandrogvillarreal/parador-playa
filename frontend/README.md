@@ -86,13 +86,15 @@ frontend/
 
 ## Funcionalidades técnicas destacadas
 
-| Componente        | Funcionalidad                                                        |
-| ----------------- | -------------------------------------------------------------------- |
-| `Dashboard`       | Muestra productos disponibles usando la API                          |
-| `Reserva`         | Permite reservar productos con reglas de negocio                     |
-| `ListadoReservas` | Muestra reservas del cliente y permite cancelación, pago y reembolso |
-| `ReservaMiniCard` | Componente visual reutilizable para mostrar un producto              |
-| `ReservaCard`     | Muestra el estado, fecha y dispositivos incluidos en una reserva     |
+| Componente             | Funcionalidad                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| `Login`                | Inicio de sesión simulado por nombre                                               |
+| `Dashboard`            | Muestra resumen de actividad y últimas reservas                                    |
+| `ReservaPage`          | Permite reservar productos con turnos validados y lógica de negocio                |
+| `ListadoReservas`      | Lista y clasifica reservas: futuras, pasadas, canceladas                           |
+| `ReservaCard`          | Componente visual para reservas individuales                                       |
+| `ProductoSelectorCard` | Muestra detalles del producto, inputs de turnos/personas y dispositivos requeridos |
+| `ModalPago`            | Simulación del proceso de pago o reembolso                                         |
 
 
 ---

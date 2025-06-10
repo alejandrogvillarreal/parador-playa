@@ -15,6 +15,7 @@ export default function ReservaCard({
     pagado: "✅ Pagado",
     cancelado: "❌ Cancelada",
     liberado: "🕓 Liberada",
+    finalizada: "🏁 Finalizada",
   };
 
   const estadoColor = {
@@ -22,6 +23,7 @@ export default function ReservaCard({
     pagado: "text-green-600",
     cancelado: "text-red-600",
     liberado: "text-gray-500",
+    finalizada: "text-blue-600"
   };
 
   return (
@@ -45,8 +47,8 @@ export default function ReservaCard({
         {(casco > 0 || chaleco > 0) && (
           <p className="text-sm text-gray-600 mb-2">
             <strong>Dispositivos:</strong>{" "}
-            {casco > 0 && `Casco x${casco} `}
-            {chaleco > 0 && `Chaleco x${chaleco}`}
+            {casco > 0 && `🪖 Casco x${casco} `}
+            {chaleco > 0 && `🦺 Chaleco x${chaleco}`}
           </p>
         )}
 

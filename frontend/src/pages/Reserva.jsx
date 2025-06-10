@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PRECIO_CASCO, PRECIO_CHALECO } from "../constants";
 import { createReserva } from "../services/reservaService";
 import { getProductos } from "../services/productoService";
 import ProductoSelectorCard from "../components/ProductoSelectorCard";
@@ -33,18 +34,23 @@ export default function ReservaPage() {
     let total = 0;
     let totalTurnos = 0;
 
-    productosSeleccionados.forEach((p) => {
-      const productoInfo = productos.find((prod) => prod._id === p._id);
-      if (productoInfo) {
-        total += p.turnos * productoInfo.precio;
-        totalTurnos += p.turnos;
-      }
-    });
+      productosSeleccionados.forEach((p) => {
+        const productoInfo = productos.find((prod) => prod._id === p._id);
+        if (productoInfo) {
+          const precioBase = p.turnos * productoInfo.precio;
+          const casco = productoInfo.requiereCasco ? p.personas : 0;
+          const chaleco = productoInfo.requiereChaleco ? p.personas : 0;
+          const precioDispositivos = casco * PRECIO_CASCO + chaleco * PRECIO_CHALECO;
 
-    if (productosSeleccionados.length > 1) total *= 0.9;
+          total += precioBase + precioDispositivos;
+          totalTurnos += p.turnos;
+        }
+      });
 
-    setTurnosTotales(totalTurnos);
-    setMontoTotal(total);
+      if (productosSeleccionados.length > 1) total *= 0.9;
+
+      setTurnosTotales(totalTurnos);
+      setMontoTotal(total);
   }, [productosSeleccionados, productos]);
 
   const handleProductoSelect = (productoId, nuevosTurnos, nuevasPersonas) => {
@@ -79,14 +85,22 @@ export default function ReservaPage() {
       return;
     }
 
-    console.log("turnosTotales", turnosTotales)
     if (turnosTotales > 3) {
       alert("No podés seleccionar más de 3 turnos en total.");
       return;
     }
+    
+    const ahora = new Date();
+    const fechaSeleccionada = new Date(fechaHora);
 
-    if (!fechaHora || new Date(fechaHora) < new Date()) {
+    if (!fechaHora || fechaSeleccionada < ahora) {
       alert("La fecha y hora deben ser válidas y futuras.");
+      return;
+    }
+
+    const diferenciaHoras = (fechaSeleccionada - ahora) / (1000 * 60 * 60);
+    if (diferenciaHoras > 48) {
+      alert("La reserva no puede realizarse con más de 48 hs de anticipación.");
       return;
     }
 
@@ -180,6 +194,8 @@ export default function ReservaPage() {
             type="date"
             className="w-full p-2 border border-gray-300 rounded mb-4"
             value={fechaHora.split("T")[0]}
+            min={new Date().toISOString().split("T")[0]} // hoy
+            max={new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString().split("T")[0]} // hoy + 48hs
             onChange={(e) => {
               const hora = fechaHora.split("T")[1]?.substring(0, 5) || "08:00";
               setFechaHora(`${e.target.value}T${hora}`);
