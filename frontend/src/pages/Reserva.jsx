@@ -70,7 +70,7 @@ export default function ReservaPage() {
 
   const generarTurnosDisponibles = () => {
     const horarios = [];
-    for (let h = 8; h <= 18; h++) {
+    for (let h = 8; h <= 22; h++) {
       horarios.push(`${h.toString().padStart(2, "0")}:00`);
       horarios.push(`${h.toString().padStart(2, "0")}:30`);
     }
