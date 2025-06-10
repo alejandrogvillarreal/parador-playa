@@ -103,7 +103,7 @@ const handleCancelar = async (id) => {
               <ReservaCard
                 key={reserva.id}
                 nombre={reserva.productos.map((p) => p.nombre).join(", ")}
-                fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
+                fecha={new Date(reserva.fecha).toLocaleString()}
                 estado={reserva.estado}
                 imagen={reserva.productos[0]?.imagen}
                 casco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.casco || 0), 0)}
@@ -126,7 +126,7 @@ const handleCancelar = async (id) => {
               <ReservaCard
                 key={reserva.id}
                 nombre={reserva.productos.map((p) => p.nombre).join(", ")}
-                fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
+                fecha={new Date(reserva.fecha).toLocaleString()}
                 estado="finalizada"
                 imagen={reserva.productos[0]?.imagen}
                 casco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.casco || 0), 0)}
@@ -149,7 +149,7 @@ const handleCancelar = async (id) => {
               <ReservaCard
                 key={reserva.id}
                 nombre={reserva.productos.map((p) => p.nombre).join(", ")}
-                fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
+                fecha={new Date(reserva.fecha).toLocaleString()}
                 estado={reserva.estado}
                 imagen={reserva.productos[0]?.imagen}
                 casco={reserva.productos.reduce((acc, p) => acc + (p.dispositivosExtra?.casco || 0), 0)}

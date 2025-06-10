@@ -14,7 +14,7 @@ export default function ReservaMiniCard({ reserva, estadoLabel }) {
           {reserva.productos.map((p) => p.nombre).join(", ")}
         </p>
         <p className="text-sm text-gray-600">
-          {new Date(reserva.fecha).toLocaleString("es-AR")}
+          {new Date(reserva.fecha).toLocaleString()}
         </p>
       </div>
 
