@@ -91,7 +91,7 @@ frontend/
 | `Dashboard`       | Muestra productos disponibles usando la API                          |
 | `Reserva`         | Permite reservar productos con reglas de negocio                     |
 | `ListadoReservas` | Muestra reservas del cliente y permite cancelación, pago y reembolso |
-| `ProductCard`     | Componente visual reutilizable para mostrar un producto              |
+| `ReservaMiniCard` | Componente visual reutilizable para mostrar un producto              |
 | `ReservaCard`     | Muestra el estado, fecha y dispositivos incluidos en una reserva     |
 
 

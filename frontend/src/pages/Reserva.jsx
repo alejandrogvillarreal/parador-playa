@@ -16,16 +16,16 @@ export default function ReservaPage() {
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const cargarProductos = async () => {
-      try {
-        const data = await getProductos();
-        setProductos(data);
-      } catch (err) {
-        console.error("Error al cargar productos:", err);
-      }
-    };
+  const cargarProductos = async () => {
+    try {
+      const data = await getProductos();
+      setProductos(data);
+    } catch (err) {
+      console.error("Error al cargar productos:", err);
+    }
+  };
 
+  useEffect(() => {
     cargarProductos();
   }, []);
 
@@ -47,18 +47,28 @@ export default function ReservaPage() {
     setMontoTotal(total);
   }, [productosSeleccionados, productos]);
 
-  const handleProductoSelect = (productoId, nuevosTurnos) => {
+  const handleProductoSelect = (productoId, nuevosTurnos, nuevasPersonas) => {
     setProductosSeleccionados((prev) => {
-      const existe = prev.find((p) => p._id === productoId);
-      const nuevaLista = existe
-        ? prev.map((p) =>
-            p._id === productoId ? { ...p, turnos: nuevosTurnos } : p
-          )
-        : [...prev, { _id: productoId, turnos: nuevosTurnos }];
+      const anterior = prev.find((p) => p._id === productoId);
+      const sinProducto = prev.filter((p) => p._id !== productoId);
 
-      // Si los turnos son 0, eliminar
-      return nuevaLista.filter((p) => p.turnos > 0);
+      const turnos = nuevosTurnos !== undefined ? nuevosTurnos : anterior?.turnos || 0;
+      const personas = nuevasPersonas !== undefined ? nuevasPersonas : anterior?.personas || 1;
+
+      if (turnos > 0 || anterior) {
+        return [...sinProducto, { _id: productoId, turnos, personas }];
+      }
+      return sinProducto;
     });
+  };
+
+  const generarTurnosDisponibles = () => {
+    const horarios = [];
+    for (let h = 8; h <= 18; h++) {
+      horarios.push(`${h.toString().padStart(2, "0")}:00`);
+      horarios.push(`${h.toString().padStart(2, "0")}:30`);
+    }
+    return horarios;
   };
 
   const handleSubmit = (e) => {
@@ -69,13 +79,14 @@ export default function ReservaPage() {
       return;
     }
 
+    console.log("turnosTotales", turnosTotales)
     if (turnosTotales > 3) {
       alert("No podés seleccionar más de 3 turnos en total.");
       return;
     }
 
-    if (new Date(fechaHora) < new Date()) {
-      alert("La fecha debe ser en el futuro.");
+    if (!fechaHora || new Date(fechaHora) < new Date()) {
+      alert("La fecha y hora deben ser válidas y futuras.");
       return;
     }
 
@@ -90,9 +101,9 @@ export default function ReservaPage() {
         return;
       }
 
-      const productosPayload = productosSeleccionados.map((p) => ({
+      const productosPayload = productosSeleccionados.filter((p) => p.turnos > 0).map((p) => ({
         producto: p._id,
-        personas: 2,
+        personas: p.personas,
         turnos: p.turnos,
       }));
 
@@ -112,26 +123,24 @@ export default function ReservaPage() {
     }
   };
 
-
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold text-center mb-8">Formulario de Reserva</h1>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Seleccioná los productos y la cantidad de turnos
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4">Seleccioná los productos y la cantidad de turnos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {productos.map((producto) => {
             const seleccionado = productosSeleccionados.find((p) => p._id === producto._id);
-            const turnos = seleccionado?.turnos || 0;
-
+            const maxTurnosPermitidos = 3 - turnosTotales + (seleccionado?.turnos || 0);
             return (
               <ProductoSelectorCard
                 key={producto._id}
                 producto={producto}
-                turnosSeleccionados={turnos}
-                onCambiarTurnos={handleProductoSelect}
+                turnosSeleccionados={seleccionado?.turnos || 0}
+                personasSeleccionadas={seleccionado?.personas || 1}
+                maxTurnosPermitidos={maxTurnosPermitidos}
+                onCambiarProducto={handleProductoSelect}
               />
             );
           })}
@@ -146,18 +155,17 @@ export default function ReservaPage() {
           <div className="mb-8 mt-4">
             <h2 className="text-2xl font-semibold mb-4">Productos seleccionados</h2>
             <ul className="space-y-4">
-              {productosSeleccionados.map((p) => {
-                const productoInfo = productos.find((prod) => prod._id === p._id);
-                return (
-                  <li
-                    key={p._id}
-                    className="flex justify-between items-center bg-white p-4 rounded shadow"
-                  >
-                    <span>{productoInfo?.nombre}</span>
-                    <span>{p.turnos} turnos</span>
-                  </li>
-                );
-              })}
+              {productosSeleccionados
+                .filter((p) => p.turnos > 0)
+                .map((p) => {
+                  const productoInfo = productos.find((prod) => prod._id === p._id);
+                  return (
+                    <li key={p._id} className="flex justify-between items-center bg-white p-4 rounded shadow">
+                      <span>{productoInfo?.nombre}</span>
+                      <span>{p.turnos} turnos · {p.personas} persona(s)</span>
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         </>
@@ -165,22 +173,46 @@ export default function ReservaPage() {
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md">
         <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-700">
-            Fecha y hora del alquiler
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Fecha
           </label>
           <input
-            type="datetime-local"
-            value={fechaHora}
-            onChange={(e) => setFechaHora(e.target.value)}
+            type="date"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={fechaHora.split("T")[0]}
+            onChange={(e) => {
+              const hora = fechaHora.split("T")[1]?.substring(0, 5) || "08:00";
+              setFechaHora(`${e.target.value}T${hora}`);
+            }}
             required
-            className="w-full mt-2 p-2 border border-gray-300 rounded"
           />
+
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
+            Seleccioná un horario
+          </label>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            {generarTurnosDisponibles().map((hora) => (
+              <button
+                key={hora}
+                type="button"
+                onClick={() => {
+                  const fecha = fechaHora.split("T")[0] || new Date().toISOString().split("T")[0];
+                  setFechaHora(`${fecha}T${hora}`);
+                }}
+                className={`py-1 px-2 rounded border text-xs font-medium text-center ${
+                  fechaHora.endsWith(hora)
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white"
+                }`}
+              >
+                {hora}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-700">
-            Método de Pago
-          </label>
+          <label className="block text-sm font-semibold text-gray-700">Método de Pago</label>
           <select
             value={metodoPago}
             onChange={(e) => setMetodoPago(e.target.value)}
@@ -192,9 +224,7 @@ export default function ReservaPage() {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-semibold text-gray-700">
-            Moneda
-          </label>
+          <label className="block text-sm font-semibold text-gray-700">Moneda</label>
           <select
             value={moneda}
             onChange={(e) => setMoneda(e.target.value)}

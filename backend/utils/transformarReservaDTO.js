@@ -20,7 +20,8 @@ const transformarReservaDTO = (reserva) => {
             turnos: p.turnos,
             precioBase: p.precioBase,
             precioDispositivos: p.precioDispositivos,
-            dispositivosExtra: p.dispositivosExtra
+            dispositivosExtra: p.dispositivosExtra,
+            imagen: p.producto.imagen
         }))
     };
 };

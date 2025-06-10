@@ -10,7 +10,8 @@ const productos = [
         precio: 100,
         requiereCasco: false,
         requiereChaleco: true,
-        cantidadPersonasMax: 2
+        cantidadPersonasMax: 2,
+        imagen: "https://images.pexels.com/photos/33046/jet-ski-water-sport-water-bike-water.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
     {
         nombre: 'Cuatriciclo',
@@ -18,7 +19,8 @@ const productos = [
         precio: 80,
         requiereCasco: true,
         requiereChaleco: false,
-        cantidadPersonasMax: 2
+        cantidadPersonasMax: 2,
+        imagen: "https://images.pexels.com/photos/1135195/pexels-photo-1135195.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
     {
         nombre: 'Equipo de buceo',
@@ -26,7 +28,8 @@ const productos = [
         precio: 60,
         requiereCasco: false,
         requiereChaleco: false,
-        cantidadPersonasMax: 1
+        cantidadPersonasMax: 1,
+        imagen: "https://images.pexels.com/photos/3113225/pexels-photo-3113225.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
     {
         nombre: 'Tabla de surf (niños)',
@@ -34,7 +37,8 @@ const productos = [
         precio: 40,
         requiereCasco: false,
         requiereChaleco: false,
-        cantidadPersonasMax: 1
+        cantidadPersonasMax: 1,
+        imagen: "https://images.pexels.com/photos/7850500/pexels-photo-7850500.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
     {
         nombre: 'Tabla de surf (adultos)',
@@ -42,7 +46,8 @@ const productos = [
         precio: 50,
         requiereCasco: false,
         requiereChaleco: false,
-        cantidadPersonasMax: 1
+        cantidadPersonasMax: 1,
+        imagen: "https://images.pexels.com/photos/7659118/pexels-photo-7659118.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     }
 ];
 

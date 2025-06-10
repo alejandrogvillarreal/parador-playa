@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getReservasByCliente } from "../services/reservaService";
-
+import ReservaMiniCard from "../components/ReservaMiniCard";
 
 export default function Dashboard() {
   const [reservas, setReservas] = useState([]);
@@ -9,25 +9,30 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+
+  const cargarReservas = async () => {
     const clienteId = localStorage.getItem("clienteId");
-    if (!clienteId) return;
+    if (!clienteId) {
+      setError("Cliente no identificado");
+      setLoading(false);
+      return;
+    }
 
-    const cargarReservas = async () => {
-      try {
-        const data = await getReservasByCliente(clienteId);
-        setReservas(data);
-      } catch (err) {
-        console.error(err);
-        setError("No se pudieron cargar las reservas.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      setLoading(true);
+      const data = await getReservasByCliente(clienteId);
+      setReservas(data);
+    } catch (err) {
+      console.error(err);
+      setError("No se pudieron cargar las reservas.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     cargarReservas();
   }, []);
-
 
   const resumen = {
     activas: reservas.filter((r) => r.estado === "pendiente" || r.estado === "pagado"),
@@ -76,26 +81,13 @@ export default function Dashboard() {
           )}
 
           <ul className="space-y-3">
-            {reservas
-              .slice(0, 3)
-              .map((reserva) => (
-                <li
-                  key={reserva._id}
-                  className="bg-white p-4 rounded shadow flex justify-between items-center"
-                >
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {reserva.productos.map((p) => p.producto?.nombre).join(", ")}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {new Date(reserva.fechaHora).toLocaleString("es-AR")}
-                    </p>
-                  </div>
-                  <span className="text-sm font-medium">
-                    {estadoLabel[reserva.estado] || reserva.estado}
-                  </span>
-                </li>
-              ))}
+            {reservas.slice(0, 3).map((reserva) => (
+              <ReservaMiniCard
+                key={reserva._id}
+                reserva={reserva}
+                estadoLabel={estadoLabel}
+              />
+            ))}
           </ul>
 
           <div className="mt-10 flex flex-wrap gap-4">

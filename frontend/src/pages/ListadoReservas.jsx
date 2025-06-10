@@ -15,9 +15,7 @@ export default function ListadoReservas() {
   const [error, setError] = useState(null);
   const [reservaSeleccionada, setReservaSeleccionada] = useState(null);
 
-  // const navigate = useNavigate();
-
-  useEffect(() => {
+  const cargarReservas = async () => {
     const clienteId = localStorage.getItem("clienteId");
     if (!clienteId) {
       setError("Cliente no identificado");
@@ -25,27 +23,26 @@ export default function ListadoReservas() {
       return;
     }
 
-    const cargarReservas = async () => {
-      try {
-        const data = await getReservasByCliente(clienteId);
-        setReservas(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    try {
+      setLoading(true);
+      const data = await getReservasByCliente(clienteId);
+      setReservas(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     cargarReservas();
   }, []);
 
-  const handleCancelar = async (id) => {
+const handleCancelar = async (id) => {
     try {
       await cancelarReserva(id);
       alert("Reserva cancelada con éxito");
-      setReservas((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, estado: "cancelado" } : r))
-      );
+      await cargarReservas(); // recarga desde backend
     } catch (err) {
       alert("Error al cancelar: " + err.message);
     }
@@ -53,43 +50,24 @@ export default function ListadoReservas() {
 
   const handleConfirmarPago = async () => {
     try {
-      await pagarReserva(reservaSeleccionada._id);
+      const { id, metodoPago, moneda } = reservaSeleccionada;
+      await pagarReserva(id, metodoPago, moneda);
       alert("Reserva pagada con éxito");
-      setReservas((prev) =>
-        prev.map((r) =>
-          r._id === reservaSeleccionada._id ? { ...r, estado: "pagado" } : r
-        )
-      );
       setReservaSeleccionada(null);
+      await cargarReservas();
     } catch (err) {
       alert("Error al pagar: " + err.message);
     }
   };
 
-
   const handleReembolso = async (id) => {
     try {
       await reembolsarPorTormenta(id);
       alert("Reembolso aplicado con éxito");
-      setReservas((prev) =>
-        prev.map((r) =>
-          r._id === id ? { ...r, reembolsoPorTormenta: true, montoTotal: r.montoTotal / 2 } : r
-        )
-      );
+      await cargarReservas(); // recarga después del reembolso
     } catch (err) {
       alert("Error al aplicar reembolso: " + err.message);
     }
-  };
-
-  const obtenerImagenPorTipo = (tipo) => {
-    const imagenes = {
-      jetsky: "https://images.unsplash.com/photo-1564633351631-e85bd59a91af?w=600",
-      cuatriciclo: "https://images.unsplash.com/photo-1489731254138-5401fb834d9c?q=80",
-      buceo: "https://images.unsplash.com/photo-1544551763-8dd44758c2dd?q=80",
-      "tabla surf adulto": "https://images.unsplash.com/photo-1551524358-f34c0214781d?q=80",
-      "tabla surf niño": "https://plus.unsplash.com/premium_photo-1684517009001-0d3a715dfd91?q=80",
-    };
-    return imagenes[tipo] || "https://via.placeholder.com/150";
   };
 
   return (
@@ -105,20 +83,21 @@ export default function ListadoReservas() {
 
       <div className="flex flex-wrap gap-6 justify-center">
         {reservas.map((reserva) => {
-          const prod = reserva.productos[0];
+          const primerProducto = reserva.productos[0];
           return (
             <ReservaCard
-              key={reserva._id}
-              nombre={prod?.producto?.nombre || "Producto"}
-              fecha={new Date(reserva.fechaHora).toLocaleString("es-AR")}
+              key={reserva.id}
+              // nombre={primerProducto?.producto?.nombre || "Producto"}
+              nombre={reserva.productos.map((p) => p.nombre).join(", ")}
+              fecha={new Date(reserva.fecha).toLocaleString("es-AR")}
               estado={reserva.estado}
-              imagen={obtenerImagenPorTipo(prod?.producto?.tipo)}
-              casco={prod?.dispositivosExtra?.casco || 0}
-              chaleco={prod?.dispositivosExtra?.chaleco || 0}
+              imagen={primerProducto.imagen}
+              // casco={primerProducto?.dispositivosExtra?.casco || 0}
+              // chaleco={primerProducto?.dispositivosExtra?.chaleco || 0}
               reembolso={reserva.reembolsoPorTormenta}
-              onCancelar={() => handleCancelar(reserva._id)}
+              onCancelar={() => handleCancelar(reserva.id)}
               onPagar={() => setReservaSeleccionada(reserva)}
-              onTormenta={() => handleReembolso(reserva._id)}
+              onTormenta={() => handleReembolso(reserva.id)}
             />
           );
         })}

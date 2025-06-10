@@ -60,6 +60,33 @@ const crearReserva = async (req, res) => {
                 return res.status(400).json({ error: 'El máximo de turnos por cliente es 3.' });
             }
 
+            // Validar disponibilidad del producto
+            const inicio = new Date(fechaHora);
+            const fin = new Date(inicio.getTime() + turnos * 30 * 60 * 1000);
+
+            const reservasExistentes = await Reserva.find({
+                'productos.producto': productoBD._id,
+                estado: { $in: ['pendiente', 'pagado'] },
+                fechaHora: {
+                    $lt: fin,
+                    $gte: new Date(inicio.getTime() - (MAX_TURNOS * 30 * 60 * 1000))
+                }
+            });
+
+            for (const r of reservasExistentes) {
+                const rInicio = new Date(r.fechaHora);
+                for (const p of r.productos) {
+                    if (p.producto.toString() === productoBD._id.toString()) {
+                        const rFin = new Date(rInicio.getTime() + p.turnos * 30 * 60 * 1000);
+                        if (inicio < rFin && fin > rInicio) {
+                            return res.status(400).json({
+                                error: `El producto "${productoBD.nombre}" ya está reservado entre ${rInicio.toLocaleTimeString()} y ${rFin.toLocaleTimeString()}`
+                            });
+                        }
+                    }
+                }
+            }
+
             const precioBase = productoBD.precio * turnos;
 
             const casco = productoBD.requiereCasco ? personas : 0;
