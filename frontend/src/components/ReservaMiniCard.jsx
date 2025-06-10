@@ -1,6 +1,5 @@
 export default function ReservaMiniCard({ reserva, estadoLabel }) {
   const primerProducto = reserva.productos[0];
-  console.log("primerProducto", primerProducto)
 
   return (
     <div className="bg-white p-4 rounded shadow flex items-center gap-4">
